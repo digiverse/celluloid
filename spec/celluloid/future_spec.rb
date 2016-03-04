@@ -32,4 +32,10 @@ RSpec.describe Celluloid::Future, actor_system: :global do
     future = Celluloid::Future.new { sleep 2 }
     expect { future.value(1) }.to raise_exception(Celluloid::TaskTimeout)
   end
+
+  it "can be used without a block" do
+    future = Celluloid::Future.new
+    Thread.new { sleep 0.1; future.signal(42); }
+    expect(future.value).to eq(42)
+  end
 end
